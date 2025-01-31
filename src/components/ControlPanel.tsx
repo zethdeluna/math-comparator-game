@@ -1,6 +1,7 @@
 import '../App.css';
 import SVG from './SVG';
 import StackInput from './StackInput';
+import { generateMissingConnections } from './ConnectionHelper';
 import { useStacksData } from '../context/stacksContext';
 
 const ControlPanel = () => {
@@ -14,6 +15,7 @@ const ControlPanel = () => {
 		isPlaying,
 		setIsPlaying,
 		connections,
+		setConnections,
 		isControlPanelOpen,
 		handleControlAction
 	} = useStacksData();
@@ -38,13 +40,32 @@ const ControlPanel = () => {
 	};
 
 	// Handle play button
-	const handlePlay = () => {
-		setIsPlaying(!isPlaying);
-		handleControlAction();
-	};
+	const handlePlay = async () => {
+		// generate missing lines, if any
+		if ( connections.length < 2 ) {
 
-	// Keep play button disabled until both connections are made
-	const isPlayDisabled = connections.length < 2;
+			if ( mouseControl !== 'compare' ) {
+				setMouseControl('compare');
+			}
+
+			// Wait a small amount of time for the mode switch to complete
+			await new Promise(resolve => setTimeout(resolve, 50));
+
+			// Generate connections
+			const newConnections = await generateMissingConnections(connections);
+			setConnections([...connections, ...newConnections]);
+
+			// Small delay before starting animation
+			await new Promise(resolve => setTimeout(resolve, 50));
+
+		}
+
+		handleControlAction();
+
+		setTimeout(() => {
+			setIsPlaying(!isPlaying);
+		}, 500);
+	};
 
 	return (
 		<section className={`control-panel-wrapper ${isControlPanelOpen ? 'active' : ''}`}>
@@ -70,11 +91,10 @@ const ControlPanel = () => {
 					type="button" 
 					className="btn play" 
 					onClick={handlePlay}
-					disabled={isPlayDisabled}
 				>
 					<span className="accessibility">Play comparator animation</span>
 					{
-						!isPlaying || isPlayDisabled ? <SVG name="play-button"/> : <SVG name="rewind" />
+						!isPlaying ? <SVG name="play-button"/> : <SVG name="rewind" />
 					}
 					
 				</button>

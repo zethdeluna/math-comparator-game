@@ -144,7 +144,7 @@ const Stack: React.FC<ExtendedStackProps> = ({ position, onButtonClick, disabled
 	// Memoize increment handler
 	const handleIncrement = useCallback(() => {
 
-		if ( !isDragging ) {
+		if ( !isDragging && mouseControl === 'update' ) {
 			setCount(Math.min(count +1, 10));
 		}
 
@@ -159,21 +159,22 @@ const Stack: React.FC<ExtendedStackProps> = ({ position, onButtonClick, disabled
 	};
 
 	// Hide connection buttons if animation is playing
-	const showCompareButtons = !isPlaying && mouseControl === 'compare';
+	const showCompareButtons = !isPlaying;
 
 	return (
 		<>
 			<div className="stack-container">
 				<div className="stack-wrapper">
-					{showCompareButtons && (
-						<button 
-							type="button" 
-							id={`${position}-button-0`}
-							className={`compare-line ${isButtonDisabled('0') ? 'connected' : ''}`}
-							onClick={(e) => onButtonClick(e, `${position}-button-0` as ButtonId)}
-							disabled={isButtonDisabled('0')}
-						/>
-					)}
+
+					<button 
+						type="button" 
+						id={`${position}-button-0`}
+						className={`compare-line ${isButtonDisabled('0') ? 'connected' : ''}`}
+						onClick={(e) => onButtonClick(e, `${position}-button-0` as ButtonId)}
+						disabled={isButtonDisabled('0')}
+						style={{ opacity: showCompareButtons ? 1 : 0 }}
+					/>
+
 
 					<div 
 						className={`stack ${position} ${mouseControl === 'compare' ? 'disabled' : ''}`} 
@@ -183,8 +184,8 @@ const Stack: React.FC<ExtendedStackProps> = ({ position, onButtonClick, disabled
 						<div 
 							key={index} 
 							className={`block ${draggedBlockIndex === index ? 'being-dragged' : ''}`} 
-							onMouseDown={(e) => startDrag(e, index)}
-							onTouchStart={(e) => startDrag(e, index)}
+							onMouseDown={(e) => mouseControl === 'update' && startDrag(e, index)}
+							onTouchStart={(e) => mouseControl === 'update' && startDrag(e, index)}
 							style={{ touchAction: 'none' }}
 						>
 							<SVG name="ice-cube" />
@@ -192,15 +193,14 @@ const Stack: React.FC<ExtendedStackProps> = ({ position, onButtonClick, disabled
 						))}
 					</div>
 
-					{showCompareButtons && (
-						<button 
-							type="button" 
-							id={`${position}-button-1`}
-							className={`compare-line ${isButtonDisabled('1') ? 'connected' : ''}`}
-							onClick={(e) => onButtonClick(e, `${position}-button-1` as ButtonId)}
-							disabled={isButtonDisabled('1')}
-						/>
-					)}
+					<button 
+						type="button" 
+						id={`${position}-button-1`}
+						className={`compare-line ${isButtonDisabled('1') ? 'connected' : ''}`}
+						onClick={(e) => onButtonClick(e, `${position}-button-1` as ButtonId)}
+						disabled={isButtonDisabled('1')}
+						style={{ opacity: showCompareButtons ? 1 : 0 }}
+					/>
 				</div>
 
 				<p className="stack-count">{count}</p>
