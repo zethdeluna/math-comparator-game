@@ -15,7 +15,7 @@ const getButtonCenter = (buttonId: ButtonId): Position => {
 
 	return {
 		x: rect.left - rect.width * 1.5,
-		y: rect.top - rect.height * 0.9
+		y: rect.top - rect.height * 1.5
 	};
 
 };
