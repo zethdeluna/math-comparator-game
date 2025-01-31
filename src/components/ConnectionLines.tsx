@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { debounce } from 'lodash';
 import { useStacksData } from '../context/stacksContext';
-import type { Position, ActiveButton, Connection, ButtonId } from './InteractiveWindow';
+import type { Position, ActiveButton, Connection } from './InteractiveWindow';
 
 interface LineCoordinates {
 	x1: number;

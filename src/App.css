@@ -227,6 +227,9 @@ input[type="number"] {
 	transition: all 0.25s ease;
 	user-select: none;
 	width: 60px;
+	touch-action: none;
+	-webkit-user-select: none;
+	user-select: none;
 }
 
 .stack .block {
@@ -280,6 +283,10 @@ input[type="number"] {
 	position: fixed;
 	transition: opacity 0.25s ease;
 	width: 60px;
+	will-change: transform;
+	touch-action: none;
+	-webkit-user-select: none;
+	user-select: none;
 }
 
 .floating-block.visible {

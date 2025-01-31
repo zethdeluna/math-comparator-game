@@ -17,19 +17,25 @@ const useDragAndDrop = (count: number, setCount: (newCount: number) => void) => 
 	useEffect(() => {
 
 		// Update floating block position while dragging
-		const handleMouseMove = (e: MouseEvent) => {
+		const handleMove = (e: MouseEvent | TouchEvent) => {
 			if (isDragging && floatingBlockRef.current) {
-				floatingBlockRef.current.style.left = `${e.clientX - 30}px`;
-				floatingBlockRef.current.style.top = `${e.clientY - 30}px`;
+				const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+				const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+
+				floatingBlockRef.current.style.left = `${clientX - 30}px`;
+				floatingBlockRef.current.style.top = `${clientY - 30}px`;
 			}
 		};
 
 		// Handle block removal when "dropped" outside original position
-		const handleMouseUp = (e: MouseEvent) => {
+		const handleRelease = (e: MouseEvent | TouchEvent) => {
 			if (isDragging && originalBlockPosition.current) {
+				const clientX = 'changedTouches' in e ? e.changedTouches[0].clientX : e.clientX;
+				const clientY = 'changedTouches' in e ? e.changedTouches[0].clientY : e.clientY;
+
 				const { left, right, top, bottom } = originalBlockPosition.current;
 
-				if (e.clientX < left || e.clientX > right || e.clientY < top || e.clientY > bottom) {
+				if (clientX < left || clientX > right || clientY < top || clientY > bottom) {
 					setCount(Math.max(count - 1, 1));
 				}
 			}
@@ -42,27 +48,45 @@ const useDragAndDrop = (count: number, setCount: (newCount: number) => void) => 
 		};
 
 		// Add event listeners
-		document.addEventListener('mousemove', handleMouseMove);
-		document.addEventListener('mouseup', handleMouseUp);
+		document.addEventListener('mousemove', handleMove);
+		document.addEventListener('mouseup', handleRelease);
+		document.addEventListener('touchmove', handleMove, { passive: false });
+		document.addEventListener('touchend', handleRelease);
+		document.addEventListener('touchcancel', handleRelease);
 
 		// Clean up event listeners
 		return () => {
-			document.removeEventListener('mousemove', handleMouseMove);
-			document.removeEventListener('mouseup', handleMouseUp);
+			document.removeEventListener('mousemove', handleMove);
+			document.removeEventListener('mouseup', handleRelease);
+			document.removeEventListener('touchmove', handleMove);
+			document.removeEventListener('touchend', handleRelease);
+			document.removeEventListener('touchcancel', handleRelease);
 		};
 
 	}, [isDragging, count, setCount]);
 
 	// Initialize drag event
-	const startDrag = useCallback((e: React.MouseEvent, index: number) => {
+	const startDrag = useCallback((e: React.MouseEvent | React.TouchEvent, index: number) => {
 		e.preventDefault();
 		setIsDragging(true);
 		setDraggedBlockIndex(index);
-		originalBlockPosition.current = e.currentTarget.getBoundingClientRect();
+
+		const target = e.currentTarget;
+		originalBlockPosition.current = target.getBoundingClientRect();
 		
 		if (floatingBlockRef.current) {
-			floatingBlockRef.current.style.left = `${e.clientX - 30}px`;
-			floatingBlockRef.current.style.top = `${e.clientY - 30}px`;
+
+			const clientX = 'touches' in e.nativeEvent 
+				? e.nativeEvent.touches[0].clientX 
+				: (e as React.MouseEvent).clientX;
+			;
+			const clientY = 'touches' in e.nativeEvent 
+				? e.nativeEvent.touches[0].clientY 
+				: (e as React.MouseEvent).clientY;
+			;
+
+			floatingBlockRef.current.style.left = `${clientX - 30}px`;
+			floatingBlockRef.current.style.top = `${clientY - 30}px`;
 			setIsFloatingVisible(true);
 		}
 
@@ -160,6 +184,8 @@ const Stack: React.FC<ExtendedStackProps> = ({ position, onButtonClick, disabled
 							key={index} 
 							className={`block ${draggedBlockIndex === index ? 'being-dragged' : ''}`} 
 							onMouseDown={(e) => startDrag(e, index)}
+							onTouchStart={(e) => startDrag(e, index)}
+							style={{ touchAction: 'none' }}
 						>
 							<SVG name="ice-cube" />
 						</div>
