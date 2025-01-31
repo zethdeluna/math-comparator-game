@@ -1,50 +1,59 @@
-# React + TypeScript + Vite
+# Math Comparators Learning App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive React TypeScript application designed to help students understand mathematical comparison operators (<, >, =) through visual block stacking and comparison.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Interactive Block Stacks**: Two stacks that can each hold up to 10 blocks
+  - Click to add blocks
+  - Drag blocks away to remove them
+  - Numeric input controls for precise stack heights
 
-## Expanding the ESLint configuration
+- **Comparison Mode**: Draw connections between stacks to compare their values
+  - Connect corresponding points (top-to-top or bottom-to-bottom)
+  - Visual feedback for valid/invalid connections
+  - Animated transformation into comparison symbols (<, >, =)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Control Panel**:
+  - Toggle between Update (add/remove blocks) and Compare modes
+  - Direct numeric input for stack heights (1-10)
+  - Play button to animate comparisons
+  - Reset functionality to clear all connections
 
-- Configure the top-level `parserOptions` property like this:
+- **Responsive Design**:
+  - Tablet-friendly interface with collapsible control panel
+  - Touch-enabled drag and drop
+  - Smooth animations and transitions
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Technical Stack
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- React 
+- TypeScript
+- Context API for state management
+- SVG for dynamic line drawing and animations
+- Lodash for utility functions
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## Usage
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+1. **Adding/Removing Blocks**:
+   - Click on a stack to add blocks
+   - Drag blocks away from the stack to remove them
+   - Use the numeric inputs in the control panel for precise values
+
+2. **Drawing Comparisons**:
+   - Switch to Compare mode using the pencil icon
+   - Click connection points at the top or bottom of stacks to draw comparison lines
+   - Both top and bottom connections must be made for the comparison to work
+
+3. **Viewing Results**:
+   - Press the Play button to animate the comparison lines
+   - Lines will transform to show the appropriate comparison symbol
+   - Reset to clear all connections and start over
+
+## Component Structure
+
+- `MCLearningApp`: Main application container
+- `InteractiveWindow`: Manages the visual workspace
+- `ControlPanel`: Houses all control interfaces
+- `Stack`: Individual block stack component
+- `ConnectionLines`: Handles drawing and animating comparison lines
