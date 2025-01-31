@@ -152,7 +152,6 @@ const InteractiveWindow = () => {
 	return (
 	<section className="interactive-window">
 		<ConnectionLines 
-			handleButtonClick={handleButtonClick}
 			activeButton={activeButton}
 			connections={connections}
 		/>

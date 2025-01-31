@@ -11,7 +11,6 @@ interface LineCoordinates {
 }
 
 interface ConnectionLinesProps {
-	handleButtonClick: (e: React.MouseEvent<HTMLButtonElement>, buttonId: ButtonId) => void;
 	activeButton: ActiveButton | null;
 	connections: Connection[];
 }
@@ -169,7 +168,6 @@ const DrawingLine: React.FC<{
 );
 
 const ConnectionLines: React.FC<ConnectionLinesProps> = ({ 
-	handleButtonClick, 
 	activeButton, 
 	connections
 }) => {
