@@ -1,1 +1,0 @@
-import{r as e}from"./index-CUqLVEBu.js";const n=({title:t,titleId:r,...a},l)=>e.createElement("svg",{className:"minus",width:23,height:3,viewBox:"0 0 23 3",fill:"none",xmlns:"http://www.w3.org/2000/svg",ref:l,"aria-labelledby":r,...a},t?e.createElement("title",{id:r},t):null,e.createElement("rect",{width:23,height:3,rx:1.5,fill:"#001932"})),s=e.forwardRef(n);export{s as default};
